@@ -111,7 +111,7 @@ while True:
                     str(thread_count),
                     "-osrt",
                     "-of",
-                    f"{file_path}.srt",
+                    file_path,
                 ]
             )
         )
