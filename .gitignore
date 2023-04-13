@@ -1,0 +1,5 @@
+__pycache__
+*.wav
+*.mp4
+whisper*
+*.gz
