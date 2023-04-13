@@ -3,8 +3,8 @@
 Powered by PySimpleGUI, whisper.cpp. Mostly written by chatGPT.
 
 1. install ffmpeg on your computer.
-2. download whisper.cpp.
-3. download the model from https://huggingface.co/datasets/ggerganov/whisper.cpp/tree/main
+2. download whisper.cpp from https://github.com/ggerganov/whisper.cpp/releases
+3. download model from https://huggingface.co/datasets/ggerganov/whisper.cpp/tree/main
 4. run main.py, and wait. If you want, you can use `tmux` to run it in the bg.
 
 main code prompt
