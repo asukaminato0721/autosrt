@@ -1,21 +1,14 @@
 #!/usr/bin/env python
-import platform
 import subprocess
 from pathlib import Path
 
 import PySimpleGUI as sg
 
-if platform.system() == "Windows":
-    ffmpeg_executable = "ffmpeg.exe"
-else:
-    ffmpeg_executable = "ffmpeg"
-
-
 # Check if ffmpeg is installed
 def check_ffmpeg():
     try:
         subprocess.run(
-            [ffmpeg_executable, "-version"], capture_output=True, check=True, text=True
+            ["ffmpeg", "-version"], capture_output=True, check=True, text=True
         )
         return True
     except subprocess.CalledProcessError:
@@ -78,12 +71,12 @@ while True:
         model = values["_MODEL_"]
         thread_count = values[0]
         language = values[1]
-        filewav = f"{file_path}.wav"  # remove space to fix path
+        filewav = f"{file_path}.wav"
 
         subprocess.Popen(
             (
                 [
-                    ffmpeg_executable,
+                    "ffmpeg",
                     "-i",
                     file_path,
                     "-ar",
