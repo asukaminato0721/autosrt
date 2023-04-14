@@ -4,3 +4,4 @@ __pycache__
 whisper*
 *.gz
 *.srt
+config.ini

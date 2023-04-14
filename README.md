@@ -2,9 +2,9 @@
 
 Powered by PySimpleGUI, whisper.cpp. Mostly written by chatGPT.
 
-1. install ffmpeg on your computer.
+1. install [ffmpeg](https://ffmpeg.org/download.html) on your computer.
 2. download whisper.cpp 
-   1. windows user: https://github.com/ggerganov/whisper.cpp/releases
+   1. windows user: https://github.com/ggerganov/whisper.cpp/releases, download whisper-bin-x64.zip (or win32), select `main.exe` as whisper cpp path.
    2. macos/linux user: build from source code.
 3. download model from https://huggingface.co/datasets/ggerganov/whisper.cpp/tree/main
 4. run main.py, and wait. If you want, you can use `tmux` to run it in the bg.
