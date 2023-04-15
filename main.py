@@ -2,6 +2,8 @@
 import subprocess
 from configparser import ConfigParser
 from pathlib import Path
+from typing import List
+
 import PySimpleGUI as sg
 
 DIR = Path(__file__).parent.absolute()
@@ -115,6 +117,7 @@ LANG = {
     }.items()
 }
 
+
 def check_ffmpeg():
     try:
         subprocess.run(
@@ -159,7 +162,7 @@ layout = [
     [sg.Text("Select or fill in Video or Audio File:")],
     [
         sg.Input(key="_FILEBROWSER_", enable_events=True, visible=True),
-        sg.FileBrowse(),
+        sg.FilesBrowse(),
     ],
     [
         sg.Text("Thread Count:"),
@@ -206,49 +209,49 @@ while True:
         config["DEFAULT"][event] = values[event]
         config.write(Path(DIR / "config.ini").open("w"))
     if event == "Run Task":
-        file_path: str = values["_FILEBROWSER_"]
+        file_paths: List[str] = values["_FILEBROWSER_"].split(";")
         whisper = values["_WHISPER_"]
         model = values["_MODEL_"]
         ffmpeg = "ffmpeg" if ffmpeg_is_installed else values["_FFMPEG_"]
         thread_count = values[0]
         language = LANG[values["_LANGUAGE_"]]
-        filewav = f"{file_path}.wav"
-
-        subprocess.Popen(
-            (
-                [
-                    ffmpeg,
-                    "-i",
-                    file_path,
-                    "-ar",
-                    "16000",
-                    "-ac",
-                    "1",
-                    "-c:a",
-                    "pcm_s16le",
-                    filewav,
-                    "-y",
-                ]
+        for file_path in file_paths:
+            filewav = f"{file_path}.wav"
+            subprocess.Popen(
+                (
+                    [
+                        ffmpeg,
+                        "-i",
+                        file_path,
+                        "-ar",
+                        "16000",
+                        "-ac",
+                        "1",
+                        "-c:a",
+                        "pcm_s16le",
+                        filewav,
+                        "-y",
+                    ]
+                )
+            ).wait()
+            subprocess.Popen(
+                (
+                    [
+                        whisper,
+                        "--model",
+                        model,
+                        "-f",
+                        filewav,
+                        "-l",
+                        language,
+                        "-t",
+                        str(thread_count),
+                        "-osrt",
+                        "-of",
+                        file_path,
+                    ]
+                )
             )
-        ).wait()
-        subprocess.Popen(
-            (
-                [
-                    whisper,
-                    "--model",
-                    model,
-                    "-f",
-                    filewav,
-                    "-l",
-                    language,
-                    "-t",
-                    str(thread_count),
-                    "-osrt",
-                    "-of",
-                    file_path,
-                ]
-            )
-        )
 
 # Close the window and exit the program
 window.close()
