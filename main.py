@@ -10,8 +10,111 @@ DIR = Path(__file__).parent.absolute()
 config = ConfigParser()
 config.read(DIR / "config.ini")
 
+LANG = {
+    v: k
+    for k, v in {
+        "en": "english",
+        "zh": "chinese",
+        "de": "german",
+        "es": "spanish",
+        "ru": "russian",
+        "ko": "korean",
+        "fr": "french",
+        "ja": "japanese",
+        "pt": "portuguese",
+        "tr": "turkish",
+        "pl": "polish",
+        "ca": "catalan",
+        "nl": "dutch",
+        "ar": "arabic",
+        "sv": "swedish",
+        "it": "italian",
+        "id": "indonesian",
+        "hi": "hindi",
+        "fi": "finnish",
+        "vi": "vietnamese",
+        "iw": "hebrew",
+        "uk": "ukrainian",
+        "el": "greek",
+        "ms": "malay",
+        "cs": "czech",
+        "ro": "romanian",
+        "da": "danish",
+        "hu": "hungarian",
+        "ta": "tamil",
+        "no": "norwegian",
+        "th": "thai",
+        "ur": "urdu",
+        "hr": "croatian",
+        "bg": "bulgarian",
+        "lt": "lithuanian",
+        "la": "latin",
+        "mi": "maori",
+        "ml": "malayalam",
+        "cy": "welsh",
+        "sk": "slovak",
+        "te": "telugu",
+        "fa": "persian",
+        "lv": "latvian",
+        "bn": "bengali",
+        "sr": "serbian",
+        "az": "azerbaijani",
+        "sl": "slovenian",
+        "kn": "kannada",
+        "et": "estonian",
+        "mk": "macedonian",
+        "br": "breton",
+        "eu": "basque",
+        "is": "icelandic",
+        "hy": "armenian",
+        "ne": "nepali",
+        "mn": "mongolian",
+        "bs": "bosnian",
+        "kk": "kazakh",
+        "sq": "albanian",
+        "sw": "swahili",
+        "gl": "galician",
+        "mr": "marathi",
+        "pa": "punjabi",
+        "si": "sinhala",
+        "km": "khmer",
+        "sn": "shona",
+        "yo": "yoruba",
+        "so": "somali",
+        "af": "afrikaans",
+        "oc": "occitan",
+        "ka": "georgian",
+        "be": "belarusian",
+        "tg": "tajik",
+        "sd": "sindhi",
+        "gu": "gujarati",
+        "am": "amharic",
+        "yi": "yiddish",
+        "lo": "lao",
+        "uz": "uzbek",
+        "fo": "faroese",
+        "ht": "haitian creole",
+        "ps": "pashto",
+        "tk": "turkmen",
+        "nn": "nynorsk",
+        "mt": "maltese",
+        "sa": "sanskrit",
+        "lb": "luxembourgish",
+        "my": "myanmar",
+        "bo": "tibetan",
+        "tl": "tagalog",
+        "mg": "malagasy",
+        "as": "assamese",
+        "tt": "tatar",
+        "haw": "hawaiian",
+        "ln": "lingala",
+        "ha": "hausa",
+        "ba": "bashkir",
+        "jw": "javanese",
+        "su": "sundanese",
+    }.items()
+}
 
-# Check if ffmpeg is installed
 def check_ffmpeg():
     try:
         subprocess.run(
@@ -51,7 +154,7 @@ layout = [
             visible=True,
             default_text=config.get("DEFAULT", "_MODEL_", fallback=""),
         ),
-        sg.FileBrowse(),
+        sg.FileBrowse(file_types=(("Model", "*.bin"),)),
     ],
     [sg.Text("Select or fill in Video or Audio File:")],
     [
@@ -65,9 +168,9 @@ layout = [
     [
         sg.Text("srt language:"),
         sg.Combo(
-            ["ja", "zh", "en"],
+            values=list(LANG.keys()),
             key="_LANGUAGE_",
-            default_value=config.get("DEFAULT", "_LANGUAGE_", fallback="ja"),
+            default_value=config.get("DEFAULT", "_LANGUAGE_", fallback="japanese"),
             enable_events=True,
         ),
     ],
@@ -108,7 +211,7 @@ while True:
         model = values["_MODEL_"]
         ffmpeg = "ffmpeg" if ffmpeg_is_installed else values["_FFMPEG_"]
         thread_count = values[0]
-        language = values["_LANGUAGE_"]
+        language = LANG[values["_LANGUAGE_"]]
         filewav = f"{file_path}.wav"
 
         subprocess.Popen(
