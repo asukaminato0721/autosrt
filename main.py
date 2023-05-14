@@ -124,7 +124,7 @@ def check_ffmpeg():
             ["ffmpeg", "-version"], capture_output=True, check=True, text=True
         )
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
 
